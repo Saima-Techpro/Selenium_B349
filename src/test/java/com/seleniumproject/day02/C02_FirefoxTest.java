@@ -18,7 +18,8 @@ public class C02_FirefoxTest {
         driver.get("https://www.amazon.com");
 
         // Close the browser
-        driver.quit(); // it closes the current window opened by the driver
+        driver.close(); // it closes the current window opened by the driver
+//        driver.quit(); closes all windows opened by the driver
 
 
     }

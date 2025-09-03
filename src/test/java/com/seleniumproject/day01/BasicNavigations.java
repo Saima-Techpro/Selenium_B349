@@ -51,7 +51,7 @@ public class BasicNavigations {
         }
 
         // Close the driver
-        driver.quit(); // closes the current browser
+        driver.close(); // closes the current browser
 
 
 
