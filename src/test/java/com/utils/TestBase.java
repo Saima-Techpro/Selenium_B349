@@ -18,11 +18,11 @@ public class TestBase {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
     }
 
-    @AfterEach
-    public void tearDown() throws InterruptedException {
-        Thread.sleep(3000);
-        driver.quit();
-    }
+//    @AfterEach
+//    public void tearDown() throws InterruptedException {
+//        Thread.sleep(3000);
+//        driver.quit();
+//    }
 
 
 }

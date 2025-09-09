@@ -20,6 +20,4 @@ public class C05_TestBaseDemo extends TestBase {
     }
 
 
-
-
 }
