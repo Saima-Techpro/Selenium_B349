@@ -6,11 +6,11 @@ import org.openqa.selenium.By;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class C03_WindowHandle extends TestBase {
     @Test
-    public void windowTest(){
+    public void windowTest() throws InterruptedException {
 
         driver.get("https://the-internet.herokuapp.com/windows");
 
@@ -43,7 +43,24 @@ public class C03_WindowHandle extends TestBase {
         }
 
         // Driver is now switched to the window 2
+        Thread.sleep(3000);
+        assertEquals("New Window", driver.getTitle());
 
+        // If the driver needs to go back and forth again and again, we should get the handle of the new window and save it
+        // so we don't have to use getWindowHandles() method again and again.
+        String window2Handle = driver.getWindowHandle();
+        System.out.println("window2Handle = " + window2Handle);
+
+        // Can we switch back to window 1?
+        driver.switchTo().window(window1Handle);
+        assertEquals("The Internet", driver.getTitle());
+        Thread.sleep(3000);
+
+        // Can we switch back to window 2?
+        driver.switchTo().window(window2Handle);
+        assertEquals("New Window" , driver.getTitle());
+        assertTrue(driver.getCurrentUrl().contains("new"));
+        Thread.sleep(3000);
 
 
     }
