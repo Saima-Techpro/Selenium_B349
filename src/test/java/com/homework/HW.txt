@@ -1,0 +1,65 @@
+Task 1: dropdownTest
+  Go to https://www.amazon.com/
+  Find the element of the dropdown element. HINT: By.id(“searchDropdownBox")
+  Print the first selected option and assert if it equals “All Departments”.If it fails, then comment that code out and continue rest of the test case.
+  Select the 4th option by index (index of 3) and assert if the name is “Amazon Devices”.(after you select you need to use get first selected option method). If it fails, then comment that code out and continue rest of the test case.
+  Print all of the dropdown options-getOptions(); method returns the List<WebElement>. Using loop, print all options.
+  Print the the total number of options in the dropdown
+  Assert if ‘Appliances’ is a drop down option. Print true if “Appliances” is an option. Print false otherwise.
+  BONUS: Assert if the dropdown is in Alphabetical Order
+
+
+Task 2:
+    https://testcenter.techproeducation.com/index.php?page=dropdown
+    Create a new test method : statesTest in this class
+    Then print the total number of states from the dropdown
+    Then print all the state names
+    Select 'Texas' opting using one of the method
+    Assert if Texas is selected or not
+    Then check is the state names are in  alphabetical order(THIS WILL FAIL B/C STATE LIST IS NOT IN ALPHABETICAL ORDER)
+
+Task 3:
+    When Navigate to https://testpages.herokuapp.com/styled/windows-test.html
+    When Click on "Alerts In A New Window From JavaScript"
+    And Switch to new window
+    And Click on "Show alert box" button
+    And Accept alert
+    And Click on "Show confirm box" button
+    And Cancel alert
+    Then Assert that alert is cancelled
+    When Click on "Show prompt box" button
+    And Send "Hello World!" to the alert
+    Then Assert that "Hello World!" is sent
+
+Task 4:
+    When user goes to https://jqueryui.com/autocomplete/
+    And type Apple
+    Then select Applescript
+    And check if Applescript is selected(you can get value by js to get text of the input)
+
+Task 5:
+    As user I want to know how many items are there on amazon in the first page after I search "porcelain teapot"?
+    //    Order the  tea pot prices from min to max, find the min, max, and average price to the nearest cents.
+
+Task 6: Create an account on http://automationexercise.com as a registered user.
+
+Task 7:
+        Given user is on the https://testcenter.techproeducation.com/index.php?page=context-menu
+        When user right-clicks on the box
+        Then verify the alert message is “You selected a context menu”
+        Then accept the alert
+Task 8:
+     Given user is on the https://practice-automation.com/
+     When user scrolls down to Hover button and click it
+     And hover over 'Mouse over me' button
+     Then Verify it is hovered over
+     And user navigates back to https://practice-automation.com/
+     And click Pop ups button
+     And selects Prompt Popup
+     And writes your name with capitalized letters
+     And accept the alert
+     Then verify your name is displayed as capitalized letters
+     And user navigates back to https://practice-automation.com/
+     And click Gestures button
+     And drag the image to the right box
+     Then verify the element is dragged
