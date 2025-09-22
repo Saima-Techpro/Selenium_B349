@@ -287,6 +287,16 @@ public class TestBase {
         return element;
     }
 
+    public static WebElement fluentWaitWithCssSelector(String cssSelector, int withTimeout, int pollingEvery) {
+        FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(withTimeout))//Wait 3 second each time
+                .pollingEvery(Duration.ofSeconds(pollingEvery))//Check for the element every 1 second
+                .withMessage("Ignoring No Such Element Exception")
+                .ignoring(NoSuchElementException.class);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssSelector)));
+        return element;
+    }
+
     public static WebElement waitForClickablility(WebElement element, int timeout) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
         return wait.until(ExpectedConditions.elementToBeClickable(element));
