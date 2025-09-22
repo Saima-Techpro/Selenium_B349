@@ -1,6 +1,7 @@
 package com.utils;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -9,10 +10,16 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBase {
 
@@ -25,11 +32,11 @@ public class TestBase {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
     }
 
-//    @AfterEach
-//    public void tearDown() throws InterruptedException {
-//        Thread.sleep(3000);
-//        driver.quit();
-//    }
+    @AfterEach
+    public void tearDown() throws InterruptedException {
+        Thread.sleep(3000);
+        driver.quit();
+    }
 
     //DROPDOWN
     //    Create a method that select an option from a dropdown index
@@ -306,11 +313,161 @@ public class TestBase {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
+    //        SCREENSHOTS : capture the screenshot of entire page
 
+    public void captureScreenshotEntirePage(){
+//        1. getScreenShotAs method to capture the screenshot
+        File image = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+//        2. save the image in a path with a dynamic name
+        String now = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        String filePath = System.getProperty("user.dir")+"/test-output/Screenshot/"+now+"image.png";
+//        3. save the image in the path
+        // FileUtils.copyFile(source file, destination file); // need 2 parameters
+        try {
+            FileUtils.copyFile(image,new File(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    //        SCREENSHOTS : capture the screenshot of specific WebElement
+    public void captureScreenshotOfElement(WebElement element){
+        //        1. getScreenShotAs method to capture the screenshot
+        File image = element.getScreenshotAs(OutputType.FILE);
+//        2. save the image in a path with a dynamic name
+        String now = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        String filePath = System.getProperty("user.dir")+"/test-output/ElementsScreenshot/"+now+"image.png";
+//        3. save the image in the path
+        try {
+            FileUtils.copyFile(image,new File(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    //        SCREENSHOTS : capture the screenshot of the Entire Page (for EXTENT REPORTS)
+    public static String captureScreenshotEntirePageAsString(){
+        //        1. getScreenShotAs method to capture the screenshot
+        File image = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        //        2. save the image in a path with a dynamic name
+        String now = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        String filePath = System.getProperty("user.dir")+"/test-output/Reports/"+now+"image.png";
+        //        3. save the image in the path
+        try {
+            FileUtils.copyFile(image,new File(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //       4. return the path of the image as string. (THIS WILL BE USED TO ATTACH IN THE EXTENT REPORTS)
+        return new File(filePath).getAbsolutePath();
+    }
 
+      /*
+   SELENIUM VERIFICATION REUSABLE METHODS
+    */
+    /**
+     * Verifies whether the element is displayed on page
+     * fails if the element is not found or not displayed
+     *
+     * @param element
+     */
+    public static void verifyElementDisplayed(WebElement element) {
+        try {
+            assertTrue(element.isDisplayed(), "Element is not visible: " + element);
+        } catch (NoSuchElementException e) {
+            org.junit.jupiter.api.Assertions.fail(("Element not found: " + element));
+        }
+    }
 
+    /**
+     * Verifies whether the element matching the provided locator is displayed on page
+     * fails if the element matching the provided locator is not found or not displayed
+     *
+     * @param by
+     */
+    public static void verifyElementDisplayed(By by) {
+        try {
+            assertTrue(driver.findElement(by).isDisplayed(), "Element not visible: " + by);
+        } catch (NoSuchElementException e) {
+            org.junit.jupiter.api.Assertions.fail(("Element not found: " + by));
+        }
+    }
+    /**
+     * Verifies whether the element matching the provided locator is NOT displayed on page
+     * fails if the element matching the provided locator is not found or not displayed
+     *
+     * @param by
+     */
+    public static void verifyElementNotDisplayed(By by) {
+        try {
+            assertFalse(driver.findElement(by).isDisplayed(),"Element should not be visible: " + by);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Verifies whether the element matching the provided WebElement is NOT displayed on page
+     * fails if the element matching the WebElement is not found or not displayed
+     * @paramWebElement
+     */
+    public static void verifyElementNotDisplayed(WebElement element) {
+        try {
+            assertFalse(element.isDisplayed(),"Element should not be visible: " + element);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void verifyElementClickable(WebElement element) {
+        try {
+            assertTrue(element.isEnabled(),"Element not visible: " + element);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+
+        }
+    }
+    public static void verifyElementNotClickable(WebElement element) {
+        try {
+            assertFalse( element.isEnabled(),"Element not visible: " + element);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+       SELENIUM GET TEXT OF ELEMENT REUSABLE METHODS
+     */
+    public static String getTextWithTimeout(WebElement element, int timeout) {
+        String text="";
+        for (int i = 0; i < timeout; i++) {
+            try {
+                text = element.getText();
+                return text;
+            } catch (WebDriverException e) {
+                waitFor(1);
+            }
+        }
+        return null;
+    }
+
+    /*
+   SELENIUM TYPE IN AN INPUT REUSABLE METHODS
+   element = input element
+   text = text that you want to type
+   timeout = maximum wait
+     */
+    public static void sendKeysWithTimeout(WebElement element,String text,int timeout) {
+        for (int i = 0; i < timeout; i++) {
+            try {
+                element.sendKeys(text);
+                return;
+            } catch (WebDriverException e) {
+                waitFor(1);
+            }
+        }
+    }
 
 
 
