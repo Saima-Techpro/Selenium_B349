@@ -1,5 +1,8 @@
 package com.utils;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
@@ -36,6 +39,53 @@ public class TestBase {
     public void tearDown() throws InterruptedException {
         Thread.sleep(3000);
         driver.quit();
+    }
+
+      /*
+    Create 3 Extent Report objects:
+    1. ExtentReports(creates report),
+    2. ExtentHTMLReporter (generates html template),
+    3. ExtentTest (logs Test steps. Only this will be used in Test classes)
+
+     */
+
+    protected static ExtentReports extentReports;
+    protected static ExtentHtmlReporter extentHtmlReporter;
+    protected static ExtentTest extentTest;
+
+    /*
+    Create BeforeAll (runs before each class) for extent report pre-requisites
+    create AfterAll for generating reports using 'flush'... like perform() in Actions class
+     */
+    @BeforeAll
+    public static void setExtentReports(){
+        String now = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        String reportPath = System.getProperty("user.dir")+"/test-output/Reports/"+now+"extent-reports.html";
+
+        extentReports = new ExtentReports();
+        extentHtmlReporter = new ExtentHtmlReporter(reportPath);
+
+//       *** Optional: Add CUSTOM Information according to your project/test needs for Extent Reports ***
+        extentReports.setSystemInfo("Project Name: ", "Selenium Project");
+        extentReports.setSystemInfo("Browser: ", "Chrome");
+        extentReports.setSystemInfo("Team Name: ", "Batch 349");
+        extentReports.setSystemInfo("QA Name: ", "John Smith");
+        extentReports.setSystemInfo("Test Environment: ", "Smoke Suite");
+
+        //       *** Optional: Add DOCUMENT Information using extentHtmlReporter for Extent Reports ***
+        extentHtmlReporter.config().setReportName("Smoke Suite Report");
+        extentHtmlReporter.config().setDocumentTitle("Extent Report");
+//        DONE WITH CONFIGURATION
+
+//        Now attach Extent Report and HTML Reporter
+        extentReports.attachReporter(extentHtmlReporter);
+
+//       Now create Extent Test Report
+        extentTest = extentReports.createTest("My First Test Case", "Batch 349 Test Cases");
+    }
+    @AfterAll
+    public static void flushExtentReports(){
+        extentReports.flush();  //  MANDATORY => Required for generating the reports
     }
 
     //DROPDOWN
